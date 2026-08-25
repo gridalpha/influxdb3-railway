@@ -54,4 +54,4 @@ if [ -n "$RUN_HOME" ]; then
   export HOME="$RUN_HOME"
 fi
 
-exec setpriv --reuid="$RUN_UID" --regid="$RUN_GID" --init-groups /app-root/entrypoint.real.sh "$@"
+exec su-exec "$RUN_UID:$RUN_GID" /app-root/entrypoint.real.sh "$@"

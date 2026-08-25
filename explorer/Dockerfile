@@ -13,9 +13,12 @@ USER root
 
 COPY explorer/entrypoint.sh /app-root/railway-entrypoint.sh
 
+# The base is Alpine, whose BusyBox `setpriv` is capabilities-only and rejects
+# --reuid. su-exec is the Alpine equivalent of gosu.
 RUN set -eux; \
     sh -n /app-root/railway-entrypoint.sh; \
-    command -v setpriv; \
+    apk add --no-cache su-exec; \
+    command -v su-exec; \
     mv /app-root/entrypoint.sh /app-root/entrypoint.real.sh; \
     mv /app-root/railway-entrypoint.sh /app-root/entrypoint.sh; \
     chmod 0755 /app-root/entrypoint.sh /app-root/entrypoint.real.sh
