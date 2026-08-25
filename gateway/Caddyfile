@@ -1,0 +1,35 @@
+{
+	admin off
+	auto_https off
+	servers {
+		trusted_proxies static 100.64.0.0/10 fd00::/8
+	}
+}
+
+:{$PORT} {
+	log {
+		output stdout
+		format console
+	}
+
+	# Anonymous liveness route for Railway's health check, which sends no
+	# credentials. Declared before the catch-all because `handle` blocks are
+	# matched in the order written, not by specificity.
+	handle /healthz {
+		respond "ok" 200
+	}
+
+	handle {
+		basic_auth {
+			{$GATEWAY_USERNAME} {$GATEWAY_PASSWORD_HASH}
+		}
+
+		# Explorer is unauthenticated upstream and never reads Authorization.
+		# Stripping it stops the browser's replayed basic-auth credential from
+		# being forwarded anywhere it does not belong.
+		reverse_proxy {$EXPLORER_UPSTREAM} {
+			header_up -Authorization
+			header_up X-Real-IP {client_ip}
+		}
+	}
+}
