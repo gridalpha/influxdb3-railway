@@ -7,8 +7,13 @@
 #
 # The wrapper replaces the *launcher* the image's CMD resolves through rather
 # than declaring an ENTRYPOINT: declaring one would reset the inherited
-# CMD ["serve"] to empty.
-FROM quay.io/influxdb/influxdb3-core:latest
+# CMD ["influxdb3", "serve"] to empty.
+#
+# The tag is Docker Hub's official stable release line, floating on major 3.
+# quay.io/influxdb/influxdb3-core:latest is a *nightly* build (it reports
+# 3.11.0-nightly) and publishes no semver tags at all — not what a template
+# should hand a stranger for a database.
+FROM influxdb:3-core
 
 USER root
 

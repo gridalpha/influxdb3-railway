@@ -11,7 +11,7 @@ every `COPY` is written from the root, not from beside the Dockerfile.
 
 | Directory | Service | Base image | Public |
 |---|---|---|---|
-| `influxdb/` | time-series database, HTTP API on 8181 | `quay.io/influxdb/influxdb3-core:latest` | yes — token-authenticated API |
+| `influxdb/` | time-series database, HTTP API on 8181 | `influxdb:3-core` | yes — token-authenticated API |
 | `explorer/` | web UI, HTTP on 8080 | `influxdata/influxdb3-ui:latest` | no |
 | `gateway/` | Caddy, HTTP basic auth in front of Explorer | `caddy:2-alpine` | yes |
 
